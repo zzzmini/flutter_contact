@@ -30,12 +30,16 @@ class _MyContactState extends State<MyContact> {
   var a = 1;
   var name = ['장원영', '안유진', '가을', '이서', '레이'];
   var like = [0,0,0,0,0];
+  var phoneContactList = [];
 
   // 주소록에서 이름 얻어오기
   getContact() async{
     List<Contact> contacts = await
       FlutterContacts.getContacts(withProperties: true);
-    print(contacts);
+    print(contacts[0].displayName);
+    setState(() {
+      phoneContactList = contacts;
+    });
   }
 
   getPermission() async{
@@ -86,11 +90,19 @@ class _MyContactState extends State<MyContact> {
       body: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: ListView.builder(
-          itemCount: name.length,
+          itemCount: phoneContactList.length,
           itemBuilder: (context, index){
             return ListTile(
               leading: Image.asset('assets/profile.JPG'),
-              title: Text(name[index]),
+              title: Text(
+                phoneContactList[index].displayName==''?
+                    Text('이름없음') :
+                phoneContactList[index].displayName
+              ),
+              // 삼항연산 말고 다른 방법
+              //Text(
+              //  phoneContactList[index].displayName??'이름없음')
+
               trailing: TextButton(
                 onPressed: (){
                   // 좋아요 증가시키기
